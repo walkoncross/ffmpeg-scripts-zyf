@@ -35,5 +35,5 @@ fi
 ffmpeg -hide_banner \
     -i $input_video \
     -i $input_audio \
-    -vcodec copy -acodec copy \
+    -vcodec copy \
     -map 0:v -map 1:a $output
