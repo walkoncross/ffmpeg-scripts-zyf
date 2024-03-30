@@ -66,7 +66,9 @@ if [[ $ht1 == $ht2 ]]; then
 			[v1_fps] crop=h=(ih/2)*2:w=(iw/2)*2 [v1_crop];
 			[v0_crop][v1_crop] hstack
 			' \
+		-b:v 10000000 \
 		${output_video}
+		# -tune film \
 else
 	echo "---> The two videos have the different height, resize the second one and then stack them"
 	# #w=-2, refer to: https://stackoverflow.com/questions/20847674/ffmpeg-libx264-height-not-divisible-by-2
@@ -83,7 +85,9 @@ else
 			' \
 		-map '[outvid]' \
 		-map 0:a? 		\
+		-b:v 10000000 \
 		${output_video}
+		# -tune film \
 fi
 
 # ffmpeg -hide_banner -i 0.mp4 -i 0_1.mp4 \
