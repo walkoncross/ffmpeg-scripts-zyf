@@ -47,7 +47,7 @@ while getopts "r:c:w:h:t:s:D:o:" opt; do
   esac
 done
 
-output_grid="output_grid-${rows}x${cols}-${width}x${height}.mp4"
+output_grid="output_grid-${rows}x${cols}-${width}x${height}-${duration}s.mp4"
 
 # 移除已处理的选项，剩下的是位置参数
 shift $((OPTIND - 1))
