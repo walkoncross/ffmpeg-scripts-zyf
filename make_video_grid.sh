@@ -106,6 +106,14 @@ else
   echo "number of videos ($num_videos) is greater than or equal to rows ($rows) * cols ($cols), will make a grid video with $rows rows and $cols cols."
 fi
 
+fps1=`ffprobe -v error \
+	-select_streams v:0 \
+	-show_entries stream=r_frame_rate \
+	-of csv=s=x:p=0 \
+	$root_dir/${video_list[0]}`
+
+echo "---> fps of the first video (${video_list[0]}): $fps1"
+
 # 读取视频列表文件
 while read -r video; do
   input_videos="$input_videos -i $root_dir/$video"
@@ -136,6 +144,6 @@ xstack_filter="${xstack_inputs}xstack=inputs=$video_count:grid=${rows}x${cols}:f
 
 echo "--> xstack_filter: $xstack_filter"
 
-ffmpeg $input_videos \
+ffmpeg -r $fps1 $input_videos \
   -filter_complex "${scale_filters}${xstack_filter}" \
   -map "[stacked]" -c:v libx264 -crf 23 -preset medium -sws_flags $scale_algorithm -t $duration $output_grid
