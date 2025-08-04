@@ -35,6 +35,22 @@ fi
 
 echo "===> The output video will be saved into: ${output_video}"
 
+fps1=`ffprobe -v error \
+	-select_streams v:0 \
+	-show_entries stream=r_frame_rate \
+	-of csv=s=x:p=0 \
+	$1`
+
+echo "---> fps ($1): $fps1"
+
+fps2=`ffprobe -v error \
+	-select_streams v:0 \
+	-show_entries stream=r_frame_rate \
+	-of csv=s=x:p=0 \
+	$2`
+
+echo "---> fps ($2): $fps2"
+
 resolution1=`ffprobe -v error \
 	-select_streams v:0 \
 	-show_entries stream=width,height \
@@ -58,6 +74,7 @@ if [[ $wd1 == $wd2 ]]; then
 echo "---> The two videos have the same width, just stack them"
 
 ffmpeg -hide_banner \
+	-r ${fps1} 		\
 	-i $1 			\
 	-i $2 			\
 	-filter_complex '
@@ -74,6 +91,7 @@ echo "---> The two videos have the different width, resize the second one and th
 # #w=-2, refer to: https://stackoverflow.com/questions/20847674/ffmpeg-libx264-height-not-divisible-by-2
 	
 ffmpeg -hide_banner \
+	-r ${fps1} 		\
 	-i $1 			\
 	-i $2 			\
 	-filter_complex '
